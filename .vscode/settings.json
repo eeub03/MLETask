@@ -3,5 +3,18 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.terminal.activateEnvironment": false,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "[python]" : {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "source.organizeImports": true
+    },
+    "files.autoSave": "onFocusChange",
+    "flake8.args": [
+        "--max-line-length=120"
+    ]
 }

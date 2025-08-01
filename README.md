@@ -15,7 +15,7 @@ To get started, please install the UV manager running the command below in a cli
 
 If you need to install Python or specifically need 3.10, you can install this `uv` by running:
 
-`uv python instal 3.10`
+`uv python install 3.10`
 
 and pinning the version uv uses with
 
@@ -40,3 +40,7 @@ Now, in order to get these packages to work with Jupyter notebook, we need to ad
 Once you have done this, you can run the notebook either in VSCode or via JupyterLabs/Notebooks.
 
 Running in VSCode should work natively for recent versions, but if not you can download the [Jupyter extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) from the extensions marketplace.
+
+## Running GitHub Actions Locally.
+
+In order to run github actions locally, we can make use of Docker Engine/Desktop, act and Github Local actions. This accelerates testing by avoiding committing to main and allowing for debugging of cicd locally.
