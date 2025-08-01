@@ -1,4 +1,4 @@
-from claims_pipeline.utils.logger import CustomLogger
+from claims_pipeline.utils.logger import Logger
 import sys
 import numpy as np
 import pandas as pd
@@ -8,7 +8,7 @@ import string
 from claims_pipeline.schemas.pipeline.processed_data import InputSchema
 import pandera.pandas as pa
 
-logger = CustomLogger("DataCollection")
+logger = Logger(__name__)
 
 
 def collect_from_database(query: str) -> pd.DataFrame:
@@ -137,8 +137,8 @@ def collect_from_database(query: str) -> pd.DataFrame:
     return df
 
 
-def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
-    df.drop(columns=["family_history_3", "employment_type"], inplace=True)
+def preprocess_data(df: pd.DataFrame, columns_to_drop: list) -> pd.DataFrame:
+    df.drop(columns=columns_to_drop, inplace=True)
 
     categorical_columns = [
         "gender",
@@ -168,7 +168,9 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     try:
         InputSchema.validate(df)
     except pa.errors.SchemaError as e:
-        logger.error("Data validation failed: %s", e)
+        logger.error(
+            f"Data validation failed: {e}",
+        )
         raise e
 
     return df
@@ -177,7 +179,9 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
 if __name__ == "__main__":
     args = sys.argv[1:]
     if len(args) < 1:
-        logger.error("No query provided. Usage: python main.py '<SQL_QUERY>'")
+        logger.error(
+            "No query provided. Usage: python data_processing.py '<SQL_QUERY>'"
+        )
         sys.exit(1)
     if len(args) > 1:
         logger.warning(
@@ -194,11 +198,19 @@ if __name__ == "__main__":
     claims_dataset_df = collect_from_database(query)
 
     logger.info("Data collection completed. Preprocessing data now.")
-    claims_dataset_df_cleaned = preprocess_data(claims_dataset_df)
+    claims_dataset_df_cleaned = preprocess_data(
+        claims_dataset_df, columns_to_drop=["family_history_3", "employment_type"]
+    )
 
     filename = "cleaned_claims_dataset.parquet"
     logger.info(
         "Data preprocessing completed. Saving cleaned data as parquet file: %s",
         filename,
     )
-    claims_dataset_df_cleaned.to_parquet("/data/" + filename, index=False)
+
+    claims_dataset_df_cleaned.to_parquet(
+        "claims_pipeline/data/" + filename, index=False
+    )
+    logger.info(
+        f"Parquet file saved successfully to claims_pipeline/data/ + {filename}  Pipeline completed successfully."
+    )

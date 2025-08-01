@@ -1,0 +1,9 @@
+data_collection:
+  env_vars:
+    account_name : "test"
+    client_id : "test"
+    subscription_id : "test"
+    tenant_id : "test"
+    datalake_name : "test"
+  secrets:
+    github_client_secret_name : "client_secret"
