@@ -1,0 +1,23 @@
+name: Install UV Package Manager
+
+descriptioon: Action to install UV and dependencies to run jobs.
+
+concurrency: dev
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install UV Package Manager
+      run: |
+        echo "Install UV Package Manager"
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        
+    - name: Set up Python environment
+      run: |
+        echo "Setting up Python environment"
+        uv python install 3.10
+        uv python pin 3.10
+
+    

@@ -1,0 +1,16 @@
+name: build-and-deploy-dev
+on:
+  push:
+    branches:
+      - 'main'
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: install
+        uses: ./.github/actions/install.yml
+          
