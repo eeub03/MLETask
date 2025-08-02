@@ -12,7 +12,3 @@ class Logger(logging.Logger):
         )
         self.handler.setFormatter(self.formatter)
         self.addHandler(self.handler)
-
-
-logger = Logger("TEST")
-logger.info("test")

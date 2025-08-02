@@ -3,7 +3,7 @@ import pandas as pd
 
 
 class InputSchema(pa.DataFrameModel):
-    claim_status: pa.typing.Series[int] 
+    claim_status: pa.typing.Series[int]
     age: pa.typing.Series[int] = pa.Field(ge=18)
     height_cm: pa.typing.Series[int] = pa.Field(ge=30, le=400)
     weight_kg: pa.typing.Series[int] = pa.Field(ge=1, le=1000)

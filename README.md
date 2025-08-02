@@ -1,5 +1,5 @@
 # MLETask
-Repo for MLE task
+The purpose of this repo is host the pipeline code for training a claims pipeline xgboost model. The output of which is a model artifact tar ready for use in inference.
 
 # Setup
 This repo makes use of the UV package manager for dependency handling and virtual environments. 
@@ -41,6 +41,11 @@ Once you have done this, you can run the notebook either in VSCode or via Jupyte
 
 Running in VSCode should work natively for recent versions, but if not you can download the [Jupyter extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) from the extensions marketplace.
 
+## Running the Pipeline Script
+
+There is a pipeline script in `claims_pipeline/src/pipeline.py`. In this pipeline, we perform Data collection, cleaning, training and validation. Then we produce a model artifact, ready for deployment for inference.
+
 ## Running GitHub Actions Locally.
 
 In order to run github actions locally, we can make use of Docker Engine/Desktop, act and Github Local actions. This accelerates testing by avoiding committing to main and allowing for debugging of cicd locally.
+

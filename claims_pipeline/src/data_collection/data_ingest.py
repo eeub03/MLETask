@@ -1,12 +1,10 @@
-from claims_pipeline.utils.logger import Logger
-import sys
+from claims_pipeline.src.utils.logger import Logger
 import numpy as np
 import pandas as pd
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import MinMaxScaler
 import string
-from claims_pipeline.schemas.pipeline.processed_data import InputSchema
-import pandera.pandas as pa
+
 
 logger = Logger(__name__)
 
@@ -135,82 +133,3 @@ def collect_from_database(query: str) -> pd.DataFrame:
     )
 
     return df
-
-
-def preprocess_data(df: pd.DataFrame, columns_to_drop: list) -> pd.DataFrame:
-    df.drop(columns=columns_to_drop, inplace=True)
-
-    categorical_columns = [
-        "gender",
-        "marital_status",
-        "occupation",
-        "location",
-        "prev_claim_rejected",
-        "known_health_conditions",
-        "uk_residence",
-        "family_history_1",
-        "family_history_2",
-        "family_history_4",
-        "family_history_5",
-        "product_var_1",
-        "product_var_2",
-        "product_var_3",
-        "health_status",
-        "driving_record",
-        "previous_claim_rate",
-        "education_level",
-        "income level",
-        "n_dependents",
-    ]
-
-    for column in categorical_columns:
-        df[column] = df[column].astype("category")
-    try:
-        InputSchema.validate(df)
-    except pa.errors.SchemaError as e:
-        logger.error(
-            f"Data validation failed: {e}",
-        )
-        raise e
-
-    return df
-
-
-if __name__ == "__main__":
-    args = sys.argv[1:]
-    if len(args) < 1:
-        logger.error(
-            "No query provided. Usage: python data_processing.py '<SQL_QUERY>'"
-        )
-        sys.exit(1)
-    if len(args) > 1:
-        logger.warning(
-            "Multiple arguments provided, only the first will be used as the query."
-        )
-    query = args[0]
-    try:
-        str(args[0])
-    except ValueError:
-        logger.error("Invalid query format. Please provide a valid SQL query string.")
-        sys.exit(1)
-
-    logger.info("Starting data collection and preprocessing pipeline.")
-    claims_dataset_df = collect_from_database(query)
-
-    logger.info("Data collection completed. Preprocessing data now.")
-    claims_dataset_df_cleaned = preprocess_data(
-        claims_dataset_df, columns_to_drop=["family_history_3", "employment_type"]
-    )
-
-    filename = "cleaned_claims_dataset.parquet"
-    logger.info(
-        "Data preprocessing completed. Saving cleaned data as parquet file: %s",
-        filename,
-    )
-
-    claims_dataset_df_cleaned.to_parquet(
-        "claims_pipeline/data/" + filename, index=False
-    )
-    logger.info(
-        f"Parquet file saved successfully to claims_pipeline/data/ + {filename}  Pipeline completed successfully."
-    )
