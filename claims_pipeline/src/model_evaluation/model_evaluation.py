@@ -1,4 +1,6 @@
 # from sklearn.datasets import *
+import numpy as np
+import xgboost as xgb
 from sklearn.metrics import (
     accuracy_score,
     cohen_kappa_score,
@@ -10,8 +12,7 @@ from sklearn.metrics import (
     roc_auc_score,
     roc_curve,
 )
-import xgboost as xgb
-import numpy as np
+
 from claims_pipeline.src.utils.logger import Logger
 
 np.random.seed(1889)
@@ -23,7 +24,6 @@ def evaluate_model(
     model: xgb.XGBClassifier,
     split_data: dict,
 ) -> tuple[dict, dict]:
-
     X_train, y_train = split_data["X_train"], split_data["y_train"]
     training_metrics = _evaluate_training(X_train, y_train, model)
 
@@ -33,7 +33,7 @@ def evaluate_model(
     return training_metrics, testing_metrics
 
 
-def _evaluate_training(X_train, y_train, model) -> dict:
+def _evaluate_training(X_train: np.ndarray, y_train: np.ndarray, model: xgb.XGBClassifier) -> dict:
     train_class_preds = model.predict(X_train)
 
     train_prob_preds = model.predict_proba(X_train)[:, 1]
@@ -43,9 +43,7 @@ def _evaluate_training(X_train, y_train, model) -> dict:
     yhat = np.array(train_class_preds)
     yhat = np.clip(np.round(yhat), np.min(y), np.max(y)).astype(int)
 
-    training_data_kappa_score = round(
-        cohen_kappa_score(yhat, y, weights="quadratic"), 2
-    )
+    training_data_kappa_score = round(cohen_kappa_score(yhat, y, weights="quadratic"), 2)
 
     training_log_loss = log_loss(y_train, train_prob_preds)
     accuracy_train = accuracy_score(y_train, train_class_preds)
@@ -70,7 +68,7 @@ def _evaluate_training(X_train, y_train, model) -> dict:
     return train_model_metrics
 
 
-def _evaluate_testing(X_test, y_test, model) -> dict:
+def _evaluate_testing(X_test: np.ndarray, y_test: np.ndarray, model: xgb.XGBClassifier) -> dict:
     test_prob_preds = model.predict_proba(X_test)[:, 1]
     test_class_preds = model.predict(X_test)
 
@@ -79,6 +77,7 @@ def _evaluate_testing(X_test, y_test, model) -> dict:
     yhat = np.array(test_class_preds)
     yhat = np.clip(np.round(yhat), np.min(y), np.max(y)).astype(int)
 
+    # Scoring metrics setting
     test_data_kappa_score = round(cohen_kappa_score(yhat, y, weights="quadratic"), 2)
     accuracy_test = accuracy_score(y_test, test_class_preds)
 
@@ -93,6 +92,7 @@ def _evaluate_testing(X_test, y_test, model) -> dict:
 
     test_roc_auc = roc_auc_score(y_test, test_prob_preds)
 
+    # Logging
     logger.info("### Test Metrics ###")
     logger.info(f"Accuracy: {accuracy_test:.4f}")
     logger.info(f"Cohen Kappa: {test_data_kappa_score}")

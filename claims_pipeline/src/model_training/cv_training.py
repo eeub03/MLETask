@@ -1,20 +1,21 @@
-from scipy import stats
-import pandas as pd
+import numpy as np
 import xgboost as xgb
+from scipy import stats
 from sklearn.model_selection import RandomizedSearchCV
+
 from claims_pipeline.src.utils.logger import Logger
 
 logger = Logger(__name__)
 
 
-def cv_train_model(split_data: pd.DataFrame, eval_set_metrics_dict: dict):
+def cv_train_model(split_data: dict[str, np.ndarray], eval_set_metrics_dict: dict[str, list]):
     X_train, y_train = split_data["X_train"], split_data["y_train"]
     eval_metrics, eval_set = (
         eval_set_metrics_dict["eval_metrics"],
         eval_set_metrics_dict["eval_set"],
     )
 
-    parameter_gridSearch = RandomizedSearchCV(
+    parameter_gridsearch = RandomizedSearchCV(
         estimator=xgb.XGBClassifier(
             objective="binary:logistic",
             eval_metric=eval_metrics,
@@ -35,8 +36,8 @@ def cv_train_model(split_data: pd.DataFrame, eval_set_metrics_dict: dict):
         scoring="roc_auc",
     )
 
-    parameter_gridSearch.fit(X_train, y_train, eval_set=eval_set, verbose=False)
+    parameter_gridsearch.fit(X_train, y_train, eval_set=eval_set, verbose=False)  # type: ignore
 
-    logger.info("Best parameters are: ", parameter_gridSearch.best_params_)
+    logger.info("Best parameters are: ", parameter_gridsearch.best_params_)
 
-    return parameter_gridSearch.best_params_
+    return parameter_gridsearch.best_params_

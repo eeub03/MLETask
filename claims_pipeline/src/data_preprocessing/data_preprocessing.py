@@ -1,12 +1,12 @@
-from claims_pipeline.schemas.data_preprocessing.data_processing import InputSchema
-import pandera.pandas as pa
 import pandas as pd
+
+from claims_pipeline.schemas.data_preprocessing.data_processing import InputSchema
 from claims_pipeline.src.utils.logger import Logger
 
 logger = Logger(__name__)
 
 
-def preprocess_data(df: pd.DataFrame, columns_to_drop: list) -> pd.DataFrame:
+def preprocess_data(df: pd.DataFrame, columns_to_drop: list[str]) -> pd.DataFrame:
     df.drop(columns=columns_to_drop, inplace=True)
 
     categorical_columns = [
@@ -34,12 +34,7 @@ def preprocess_data(df: pd.DataFrame, columns_to_drop: list) -> pd.DataFrame:
 
     for column in categorical_columns:
         df[column] = df[column].astype("category")
-    try:
-        InputSchema.validate(df)
-    except pa.errors.SchemaError as e:
-        logger.error(
-            f"Data validation failed: {e}",
-        )
-        raise e
+
+    InputSchema.validate(df)
 
     return df

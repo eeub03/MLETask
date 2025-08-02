@@ -1,7 +1,8 @@
-import pytest
-from claims_pipeline.src.data_collection.data_ingest import collect_from_database
 import pandas as pd
+import pytest
 import yaml
+
+from claims_pipeline.src.data_collection.data_ingest import collect_from_database
 from claims_pipeline.src.utils.logger import Logger
 
 
@@ -14,10 +15,8 @@ def logger():
 
 
 @pytest.fixture
-def mock_data_values(logger):
-    return yaml.safe_load(
-        open("claims_pipeline\\tests\\fixtures\\config\\collect_data.yml")
-    )
+def mock_data_values():
+    return yaml.safe_load(open("claims_pipeline/tests/fixtures/config/pipeline.yml"))
 
 
 @pytest.fixture
@@ -30,7 +29,7 @@ def database_stubber(mocker):
     return None
 
 
-def test_collect_from_database(mock_data_values, database_stubber, logger):
+def test_collect_from_database(mock_data_values, database_stubber):
     query = "SELECT * FROM CLAIMS.DS_DATASET"
     # We would also pass in mock_data_values if this was a real database call.
 

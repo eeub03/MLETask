@@ -1,0 +1,12 @@
+name: unit tests
+
+description: Run pytest -n auto
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python environment
+      run: |
+        pytest -n auto
+      shell: bash
+    

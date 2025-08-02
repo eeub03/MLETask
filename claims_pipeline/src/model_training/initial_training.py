@@ -1,28 +1,19 @@
+import numpy as np
 import pandas as pd
-import pandera as pa
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
+
 from claims_pipeline.src.utils.logger import Logger
 
 logger = Logger(__name__)
 
 
 def train_model(
-    df: pd.DataFrame,
-    need_splitting: bool,
-    label_column: str | None = None,
+    df: dict[str, np.ndarray],
     model_params: dict | None = None,
-) -> xgb.XGBClassifier:
-    if need_splitting:
-        if label_column:
-            df = split_data_train_test(data_df=df, label_column=label_column)
-        else:
-            raise Exception(
-                "Error, passed True for splitting of data but did not a label column name."
-            )
-    split_data = df
-    X_train, y_train = split_data["X_train"], split_data["y_train"]
-    X_test, y_test = split_data["X_test"], split_data["y_test"]
+) -> tuple[xgb.XGBClassifier, dict[str, list]]:
+    X_train, y_train = df["X_train"], df["y_train"]
+    X_test, y_test = df["X_test"], df["y_test"]
 
     # Build the evaluation set & metric list
     eval_set = [(X_train, y_train)]
@@ -40,7 +31,7 @@ def train_model(
 
     model.fit(X_test, y_test, eval_set=eval_set, verbose=10)
 
-    return (model, split_data, eval_set_metrics_dict)
+    return model, eval_set_metrics_dict
 
 
 def split_data_train_test(
@@ -48,7 +39,7 @@ def split_data_train_test(
     label_column: str,
     test_size: float = 0.2,
     random_state: int = 1889,
-):
+) -> dict[str, np.ndarray]:
     logger.info("Validating DataFrame schema...")
     # Pandera schema validation goes here
 
@@ -61,9 +52,7 @@ def split_data_train_test(
     )
 
     # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
     split_data = {
         "X_train": X_train,
         "y_train": y_train,

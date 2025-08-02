@@ -49,3 +49,4 @@ There is a pipeline script in `claims_pipeline/src/pipeline.py`. In this pipelin
 
 In order to run github actions locally, we can make use of Docker Engine/Desktop, act and Github Local actions. This accelerates testing by avoiding committing to main and allowing for debugging of cicd locally.
 
+Once Docker is installed, you can install 

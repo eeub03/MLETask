@@ -1,6 +1,7 @@
-from omegaconf import OmegaConf, DictConfig
 from pathlib import Path
 from typing import Any
+
+from omegaconf import DictConfig, ListConfig, OmegaConf
 
 
 def _get_config_path() -> Path:
@@ -8,7 +9,7 @@ def _get_config_path() -> Path:
     return config_dir / "config"
 
 
-def _load_config(filename: str) -> DictConfig | list[DictConfig]:
+def _load_config(filename: str) -> DictConfig | ListConfig:
     # Relative path to the file inside the config directory
     config_file = _get_config_path() / filename
     config = OmegaConf.load(config_file)

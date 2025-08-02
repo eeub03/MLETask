@@ -1,27 +1,24 @@
-import joblib
 import json
 import sys
-from claims_pipeline.src.utils.logger import Logger
+
+import joblib
+
 from claims_pipeline.src.data_collection.data_ingest import collect_from_database
 from claims_pipeline.src.data_preprocessing.data_preprocessing import preprocess_data
-from claims_pipeline.src.model_training.initial_training import train_model
-from claims_pipeline.src.model_training.cv_training import cv_train_model
-from claims_pipeline.src.utils.load_config_for_env import load_config_for_env
 from claims_pipeline.src.model_evaluation.model_evaluation import evaluate_model
-
+from claims_pipeline.src.model_training.cv_training import cv_train_model
+from claims_pipeline.src.model_training.initial_training import split_data_train_test, train_model
+from claims_pipeline.src.utils.load_config_for_env import load_config_for_env
+from claims_pipeline.src.utils.logger import Logger
 
 if __name__ == "__main__":
     logger = Logger(__name__)
     args = sys.argv[1:]
     if len(args) < 1:
-        logger.error(
-            "No environment provided. Usage: uv run pipeline.py '<ENVIRONMENT>'"
-        )
+        logger.error("No environment provided. Usage: uv run pipeline.py '<ENVIRONMENT>'")
         sys.exit(1)
     if len(args) > 1:
-        logger.warning(
-            "Multiple arguments provided, only the first will be used as the environment"
-        )
+        logger.warning("Multiple arguments provided, only the first will be used as the environment")
     env = args[0]
     try:
         str(args[0])
@@ -31,9 +28,7 @@ if __name__ == "__main__":
     try:
         config = load_config_for_env(filename="pipeline.yml", env=env)
     except FileNotFoundError as e:
-        logger.error(
-            "Configuration file not found. Please check the path or Environment argument passed."
-        )
+        logger.error("Configuration file not found. Please check the path or Environment argument passed.")
         logger.error(f"Error loading configuration: {e}")
         sys.exit(1)
 
@@ -70,19 +65,19 @@ if __name__ == "__main__":
         f"Parquet file saved successfully to claims_pipeline/data/ + {filename}  Pipeline completed successfully."
     )
 
-    # 3.1 Train model
+    # 3.1 Split data
+    logger.info("Splitting data")
+    split_data = split_data_train_test(data_df=claims_dataset_df_cleaned, label_column=config.training.label_column)
+    logger.info(split_data.keys())
+    # 3.2 Train model
     logger.info("Starting initial model training.")
     # Build the evaluation set & metric list
-    initial_model, split_data, eval_set_metrics_dict = train_model(
-        claims_dataset_df_cleaned, need_splitting=True, label_column="claim_status"
-    )
+    initial_model, eval_set_metrics_dict = train_model(split_data)
     logger.info("Model training completed successfully.")
 
     # 4.1 Evaluate Model
 
-    initial_training_metrics, initial_testing_metrics = evaluate_model(
-        initial_model, split_data
-    )
+    initial_training_metrics, initial_testing_metrics = evaluate_model(initial_model, split_data)
 
     # 4.2 Save Metrics locally. Save Model Locally.
     # This enables us to reuse the model in inference pipelines.
@@ -98,10 +93,9 @@ if __name__ == "__main__":
         # 5.1 Use Cross Validation to see if model performance can be improved.
         best_paramaters = cv_train_model(split_data, eval_set_metrics_dict)
         joblib.dump(best_paramaters, params_location, compress=1)
-    logger.info("Best Parameters found")
+
+    logger.info("Training model using best found paramaters")
     # 6.1 Use parameters above to train new model using those parameters
-    final_model = train_model(
-        split_data, need_splitting=False, model_params=best_paramaters
-    )
+    final_model = train_model(split_data, model_params=best_paramaters)
 
     joblib.dump(final_model, "claims_pipeline/model_artifacts/model.gz")

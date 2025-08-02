@@ -7,7 +7,11 @@ data_collection:
   query: "SELECT * FROM claims_data"
   github_client_secret_name : "client_secret"
   
+training:
+  label_column: "claim_status"
+
 pipeline:
   pipeline_name: "claims_pipeline"
   pipeline_role_arn: "arn:xxx:xxx:xxx:claims_pipeline_role"
+  azure_bucket_arn: ""
 

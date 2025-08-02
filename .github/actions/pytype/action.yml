@@ -1,0 +1,12 @@
+name:  pytype 
+
+description: Checking type hints and return hints
+
+runs:
+  using: 'composite'
+  steps:
+    - name: pytype
+      run: |
+        pytype . 
+      shell: bash
+    

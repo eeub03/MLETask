@@ -1,0 +1,12 @@
+name: Run Ruff linter
+
+description: Linter
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Linting
+      run: |
+        ruff
+      shell: bash
+    
