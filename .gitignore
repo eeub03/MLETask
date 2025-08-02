@@ -6,3 +6,5 @@ claims_pipeline/data/*
 .pytest_cache
 __pycache__
 MLETask.egg-info
+.pytype
+.ruff_cache

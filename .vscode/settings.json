@@ -8,12 +8,8 @@
     "editor.codeActionsOnSave": {
         "source.organizeImports": "explicit"
     },
-    // "[python]" : {
-    //     "editor.defaultFormatter": "ms-python.black-formatter",
-    //     "editor.formatOnSave": true,
-    //     "source.organizeImports": true
-    // },
+
     "files.autoSave": "onFocusChange",
-    // "ruff.lint.extendSelect": ["ALL"],
+    "ruff.lint.extendSelect": ["ALL"],
     "ruff.lineLength": 120,
 }
