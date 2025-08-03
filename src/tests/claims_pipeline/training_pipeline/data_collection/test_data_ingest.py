@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 import yaml
 
-from claims_pipeline.training_pipeline.data_collection.data_ingest import collect_from_database
+from claims_pipeline.data_pipeline.data_collection.data_ingest import collect_from_database
 from claims_pipeline.utils.logger import Logger
 
 

@@ -19,5 +19,10 @@ def test__load_config(mocker, mock__get_config_path: Path):
     assert _load_config("dev/pipeline.yml") == OmegaConf.load(_load_config_value)
 
 
-def test_load_config_for_env():
-    
+envs = ["dev", "pre-prod", "prod"]
+
+
+@pytest.mark.parametrize("env", envs)
+def test_load_config_for_envs(env):
+    load_config_for_env("training_pipeline.yml", env=env)
+    assert load_config_for_env

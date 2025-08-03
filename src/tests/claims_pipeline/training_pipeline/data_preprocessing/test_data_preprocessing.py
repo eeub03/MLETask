@@ -1,7 +1,7 @@
 import pytest
 import yaml
 
-from claims_pipeline.training_pipeline.data_preprocessing.data_preprocessing import preprocess_data
+from claims_pipeline.data_pipeline.data_preprocessing.data_preprocessing import preprocess_data
 
 
 @pytest.fixture

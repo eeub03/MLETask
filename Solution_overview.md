@@ -20,7 +20,7 @@ This repo has been designed to use the following tools:
     - More feature rich than the built in unit test suite that python offers.
     - Lots of Plugins allow for further features
         - Example of pytest-xdist allowing for parallelising of tests across cores via one flag `pytest -n auto`
-    - Widely used in the tech world, so most devs are familar with this suite.
+    - Widely adopted across the industry.
     - Doesn't support Behavourial Driven Development as much as other frameworks.
 - Github Actions.
     - CICD Deployment.
@@ -94,10 +94,11 @@ One of the refactors later on was splitting the main pipeline script up, since i
 - SQL Query - Currently our query is stored in a config file, but it should changed to point to an `.sql` file so that we can pass in bigger/more complex queries in future if we want and we can still benefit from versioning of the file.
 - Github Repo rules - Currently there are no rules to prevent admins from pushing straight to main. 
 - No Data Versioning - We don't save the data we currently query as a version of the dataset so it will be much more diffult if not impossible to replicate model results if data changes.
+- Script currently makes use of parameter passing for data reading and loading. While we do cache the outputs of functions, we are not using them by reading them in as is typically done in prod pipelines.
 
 ### Improvements
 - Add MetaData & Model Artifact Saving to cloud storage.
-    - Even better, integrate with model registry service like MLFLOW.
+    - Even better, integrate with model registry service which would allow for better auditing and Model Governance. 
 - Global Log list to avoid creating duplicate loggers.
 - Finish CICD to deploy to Dev, Pre-Prod and Production environments.
 - Use Joblib to implement paralleisation of pipeline steps and improve the overall performance of the pipeline.
@@ -108,4 +109,6 @@ One of the refactors later on was splitting the main pipeline script up, since i
 - Create a custom docker image for model deployment.
 - Implement support for running pipeline across multiple instances to support big data use cases.
 - Data Versioning.
+- Support for batch and real time inference.
+
 
