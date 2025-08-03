@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 import pytest
 import yaml
@@ -14,7 +16,7 @@ def logger():
 
 @pytest.fixture
 def mock_data_values():
-    return yaml.safe_load(open("claims_pipeline/tests/fixtures/config/pipeline.yml"))
+    return yaml.safe_load(Path("claims_pipeline/tests/fixtures/config/dev/training_pipeline.yml").open())
 
 
 @pytest.fixture

@@ -64,19 +64,14 @@ def _step_evaluate_model(model: xgb.XGBClassifier, data: dict):
 
 
 def _step_hyperparameter_tuning(data: dict, eval_dict: dict, model_artifact_dir: str) -> dict:
-    # Randomized GridSearch is very computationaly expensive, even with this small dataset so "caching" the results for integration testing.
-    try:
-        best_paramaters = joblib.load(model_artifact_dir + "/best_parameters.gz")
-    except FileNotFoundError:
-        # 5.1 Use Cross Validation to see if model performance can be improved.
-        best_paramaters = cv_train_model(data, eval_dict)
+    best_paramaters = cv_train_model(data, eval_dict)
     return best_paramaters
 
 
-def _step_train_final_model(data: dict, best_parameters: dict):
+def _step_train_final_model(data: dict, best_parameters: dict) -> xgb.XGBClassifier:
     logger.info("Training model using best found paramaters")
     # 6.1 Use parameters above to train new model using those parameters
-    final_model = train_model(data, model_params=best_paramaters)
+    final_model, _ = train_model(data, model_params=best_paramaters)
     return final_model
 
 

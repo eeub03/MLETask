@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 import yaml
 
@@ -6,7 +8,7 @@ from claims_pipeline.data_pipeline.data_preprocessing.data_preprocessing import 
 
 @pytest.fixture
 def mock_data_values(logger):
-    return yaml.safe_load(open("claims_pipeline/tests/fixtures/config/pipeline.yml"))
+    return yaml.safe_load(Path("claims_pipeline/tests/fixtures/config/dev/training_pipeline.yml").open())
 
 
 @pytest.fixture

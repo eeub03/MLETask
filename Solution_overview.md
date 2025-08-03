@@ -2,7 +2,7 @@
 In this repo, we have been tasked with converting a Jupyter Notebook to a production ready pipeline. This pipeline needs to be:
 - Robust and Tested Regularly.
 - Model to be updated Regularly (Data comes in daily, so this Daily is probably the minimum).
-- Inference Ran as batch jobs when data comes in.
+- Model needs to be pre
 
 ## Key Design Decisions
 This repo has been designed to use the following tools:
@@ -48,12 +48,14 @@ This repo has been designed to use the following tools:
     - Easy to manage, maintain and modify for different environments.
 - Pipeline.py
     - Main file for running pipeline code.
+    - Can be run locally or in Docker.
     - Split up steps into their own functions for readability and maintainability.
     - Same reason for splitting out the different steps into their own directories and modules.
         - This means there is less risk of changing main script code when only needing to change one step.
     - Easily convertible to cloud solutions.
         - We can wrap cloud specific pipeline solutions around our functions. E.G. Sagemaker Pipelines steps take in python functions as arguments.
     - The main disadvantage to this approach is that it takes a lot of developer effort to setup.
+    - Also, while this can be used to test the logic of the pipline it does not reflect cloud environments which run in Docker Containers on instances.
 - Data, Training and Model pipelines.
     - These were split up this way as it is good to decouple use cases in ML Pipelines for maintainabiltiy reasons.
     - This can be overkill for small use cases where we are not reusing aspects of our data pipeline or don't need to run data pipelines separately from training.
