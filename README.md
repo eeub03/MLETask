@@ -1,6 +1,11 @@
 # MLETask
 The purpose of this repo is host the pipeline code for training a claims pipeline xgboost model. The output of which is a model artifact tar ready for use in inference.
 
+# Quickstart.
+
+If you just want to get started as soon as possible you can run `./scripts/setup_repo.sh` in a bash terminal to immediately install UV, Python 3.10 and get the venv created. 
+Manual Setup is detailed in the section below.
+
 # Setup
 ## VSCode Extensions
 Before proceeding with setting up of python and the virtual environment, the following extensions and packages are recommended to download as they are in use in this repo:
@@ -14,10 +19,10 @@ Before proceeding with setting up of python and the virtual environment, the fol
 | [Git lens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)   | Git Integration    |    |
 
 
-
+## [UV Package Manager](https://docs.astral.sh/uv/pip/environments/)
 This repo makes use of the UV package manager for dependency handling and virtual environments. 
 
-To get started, please install the UV manager running the command below in a cli.
+To get started, please install the UV package manager running the command below in a cli.
 ### Mac & Linux:
 `curl -LsSf https://astral.sh/uv/install.sh | sh`
 ### Windows
@@ -63,15 +68,19 @@ Running in VSCode should work natively for recent versions, but if not you can d
 
 This will then enable the notebooks to be rendered. If you have been following the README up to this point, you should be be able to run the notebook and select the venv as the kernel.
 
-## Running the Pipeline Script
+# Running the training Pipeline Script
 
-There is a pipeline script in `src/claims_pipeline/pipeline.py`. In this pipeline, we perform Data collection, cleaning, training and validation. Then we produce a model artifact, ready for deployment for inference.
+There is a pipeline script in `src/claims_pipeline/training_pipeline/pipeline.py`. In this pipeline, we perform Data collection, cleaning, training and validation. Then we produce a model artifact, ready for deployment for inference.
 This script performs the following steps:
 1. Data collection
 2. Data preprocessing
 3. Model Training
 4. Parameter Hyper Tuning
 5. Packaging of Model.
+
+To run the script locally, you can use `uv run src/claims_pipeline/training_pipeline/pipeline.py dev`
+
+
 
 ## CICD
 In order to support deployment of the model, Github Actions have been created to start the process of deploying models to development, pre-production and production environments.

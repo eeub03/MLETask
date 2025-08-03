@@ -8,3 +8,4 @@ __pycache__
 MLETask.egg-info
 .pytype
 .ruff_cache
+**/pipeline.out/*

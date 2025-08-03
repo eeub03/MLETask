@@ -6,7 +6,7 @@ from omegaconf import DictConfig, ListConfig, OmegaConf
 
 def _get_config_path() -> Path:
     config_dir = Path(__file__).resolve().parents[1]
-    return config_dir / "config"
+    return config_dir / "config"  # return absolute path to config directory in claims_pipeline/config
 
 
 def _load_config(filename: str) -> DictConfig | ListConfig:
@@ -19,6 +19,7 @@ def _load_config(filename: str) -> DictConfig | ListConfig:
 
 def load_config_for_env(filename: str, env: str) -> Any:  # noqa: ANN401
     """Load configuration from a YAML file for a specific environment.
+
     Merges the base configuration with the environment-specific configuration.
     """
     base_config = _load_config(f"base/{filename}")

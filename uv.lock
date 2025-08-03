@@ -994,6 +994,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "graphviz" },
+    { name = "ipython" },
     { name = "joblib" },
     { name = "jupyter" },
     { name = "matplotlib" },
@@ -1014,6 +1015,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "graphviz", specifier = ">=0.21" },
+    { name = "ipython", specifier = ">=8.37.0" },
     { name = "joblib", specifier = ">=1.5.1" },
     { name = "jupyter", specifier = ">=1.1.1" },
     { name = "matplotlib", specifier = ">=3.10.5" },

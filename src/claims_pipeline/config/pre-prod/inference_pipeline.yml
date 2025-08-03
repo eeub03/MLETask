@@ -1,0 +1,15 @@
+data_collection:
+  account_name : "rg_data_sci"
+  client_id : "a1b2c3d4"
+  subscription_id : "8a7b6c5d"
+  tenant_id : "6f5g4h3i"
+  datalake_name : "rg_data_lake"
+  query: "SELECT * FROM claim_applicants"
+  github_client_secret_name : "client_secret"
+
+
+pipeline:
+  pipeline_name: "claims_inference_pipeline"
+  pipeline_role_arn: "arn:xxx:xxx:xxx:claims_pipeline_role"
+  azure_bucket_arn: ""
+
