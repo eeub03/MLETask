@@ -81,6 +81,5 @@ This script performs the following steps:
 To run the script locally, you can use `uv run src/claims_pipeline/training_pipeline/pipeline.py dev`
 
 
-
 ## CICD
 In order to support deployment of the model, Github Actions have been created to start the process of deploying models to development, pre-production and production environments.

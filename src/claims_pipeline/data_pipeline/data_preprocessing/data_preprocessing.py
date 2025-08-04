@@ -7,6 +7,7 @@ logger = Logger(__name__)
 
 
 def preprocess_data(df: pd.DataFrame, columns_to_drop: list[str]) -> pd.DataFrame:
+    """Removes columns with empty data and changes column type to categorical for non-numerical data."""
     df_cleaned = df.drop(columns=columns_to_drop)
 
     categorical_columns = [
