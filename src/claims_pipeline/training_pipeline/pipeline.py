@@ -133,7 +133,7 @@ if __name__ == "__main__":
         model_artifact_dir=run_dir,
     )
 
-    joblib.dump(best_paramaters, f"{run_dir}best_paramaters.gz")
+    joblib.dump(best_paramaters, f"{run_dir}/best_paramaters.gz")
 
     final_model = _step_train_final_model(data=split_data, best_parameters=best_paramaters)
     joblib.dump(final_model, f"{run_dir}/final_model.gz")
